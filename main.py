@@ -1,10 +1,10 @@
 # This is where we test our program
 
-from SyntaxTree import *
+from syntax_tree import *
 
 sign = Signature()
 
-sign.addPredicateSymbol("brije", 2)
+sign.add_predicate_symbol("brije", 2)
 
 const1 = ConstantTerm('b')
 var2 = VariableTerm('x')
@@ -24,16 +24,16 @@ existsB = Exists(const1, fallX)
 iff1 = Iff(existsB, not1)
 not2 = Not(iff1)
 
-not2.printMe()
+not2.print_me()
 print("")
-nnf = not2.NNF()
-nnf.printMe()
+nnf = not2.nnf()
+nnf.print_me()
 
 print("")
 
 nnf = nnf.prenex()
 
-nnf.printMe()
+nnf.print_me()
 
 print
 print
@@ -43,7 +43,7 @@ print
 
 sign = Signature()
 
-sign.addPredicateSymbol("P", 2)
+sign.add_predicate_symbol("P", 2)
 
 varx = VariableTerm("x")
 vary = VariableTerm("y")
@@ -57,20 +57,20 @@ forallx2 = Forall( varx, atomP)
 existsy2 = Exists( vary, forallx2 )
 
 impl = Imp( forallx1, existsy2)
+impl = Not(impl)
 print("Formula:")
-impl.printMe()
+impl.print_me()
 
 print
 
-impl = Not(impl)
-impl = impl.NNF()
+impl = impl.nnf()
 print("NNF:")
-impl.printMe()
+impl.print_me()
 
 print
 
 impl = impl.prenex()
 print("Prenex:")
-impl.printMe()
+impl.print_me()
 
 print
