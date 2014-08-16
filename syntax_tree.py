@@ -737,7 +737,6 @@ class Imp(BinaryOperator):
         """Returns the prenex form of this formula."""
         raise Exception("prenex failed! Formula must be in nnf!")
 
-# Equivalence of two formulas
 class Iff(BinaryOperator):
     """A class that represent the Equivalence of two formulas in first order logic."""
     def __init__(self, formula1, formula2):
