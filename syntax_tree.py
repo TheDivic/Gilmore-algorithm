@@ -22,7 +22,10 @@ class TermTypes(object):
     T_FUNC = 1
     T_CONST = 2
 
+#unique variable index
 uv_index = 0
+#unique constant index
+uc_index = 0
 
 def get_unique_variable():
     """Returns an unique variable."""
@@ -30,11 +33,12 @@ def get_unique_variable():
     uv_index = uv_index + 1
     return "uv%d" % uv_index
 
+def get_unique_constant():
+    """Returns an unique constant."""
+    global uc_index
+    uc_index = uc_index + 1
+    return "uc%d" % uc_index
 
-# Signature is a map of FUNCTION => NUM_OF_VARIABLES or PREDICATE => NUM_OF_VARIABLES
-# It exists so we can't declare two functions with the same name but the different number of variables,
-# or we declare a function that is unkown to our "closed world".
-# ( that is not allowed in first order logic )
 class Signature(object):
     """A class that represents a signature in first order logic.
 
@@ -85,7 +89,16 @@ class VariableTerm:
 
     def __eq__(self, other):
         """Equality operator."""
-        return other.get_type() == TermTypes.T_VAR and self.name == other.name
+        equal = False
+        try:
+            equal = other.get_type() == TermTypes.T_VAR and self.name == other.name
+        except AttributeError ,attr_err:
+            print "Exception: %s" % attr_err
+            print """-- TIP FROM DIVIC: You probably used substitute_variable with a variable name
+instead of a VariableTerm object. --"""
+            raise
+
+        return equal
 
     def __ne__(self):
         """Non-equality operator."""
