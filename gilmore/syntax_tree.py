@@ -22,22 +22,6 @@ class TermTypes(object):
     T_FUNC = 1
     T_CONST = 2
 
-#unique variable index
-uv_index = 0
-#unique constant index
-uc_index = 0
-
-def get_unique_variable():
-    """Returns an unique variable."""
-    global uv_index
-    uv_index = uv_index + 1
-    return "uv%d" % uv_index
-
-def get_unique_constant():
-    """Returns an unique constant."""
-    global uc_index
-    uc_index = uc_index + 1
-    return "uc%d" % uc_index
 
 class Signature(object):
     """A class that represents a signature in first order logic.
@@ -59,20 +43,27 @@ class Signature(object):
         """Adds a predicate to the signature."""
         self.predicates[predicate_symbol] = arity
 
-    def check_function_symbol(self, function_symbol):
+    def check_function_symbol(self, function_symbol, arity):
         """Returns the arity of a given function symbol."""
-        if function_symbol in self.functions:
-            return self.functions[function_symbol]
+        if function_symbol not in self.functions:
+            self.functions[function_symbol] = arity
+            return True
+        elif self.functions[function_symbol] == arity:
+            return True
         else:
             return False
 
-    def check_predicate_symbol(self, predicate_symbol):
+    def check_predicate_symbol(self, predicate_symbol, arity):
         """Returns the arity of a given predicate symbol."""
-        if predicate_symbol in self.predicates:
-            return self.predicates[predicate_symbol]
+        if predicate_symbol not in self.predicates:
+            self.predicates[predicate_symbol] = arity
+            return True
+        elif self.predicates[predicate_symbol] == arity:
+            return True
         else:
             return False
 
+global_signature = Signature()
 
 class VariableTerm:
     """A term that represents a variable, for example p, q, r in formulas like: (p /\\ q) => r"""
@@ -171,14 +162,13 @@ class ConstantTerm(object):
 
 class FunctionTerm:
     """A term that represents a function of multiple other terms, for example f(p) or q(x, f(y))."""
-    def __init__(self, signature, function_symbol, operands):
-        self.signature = signature
+    def __init__(self, function_symbol, operands):
         self.function_symbol = function_symbol
         self.operands = operands
 
-        check = signature.check_function_symbol(function_symbol)
+        global global_signature
 
-        if check is False or check != len(operands):
+        if not global_signature.check_function_symbol(function_symbol, len(operands)):
             raise Exception("Syntax error! Bad signature.")
 
     def print_me(self):
@@ -222,7 +212,7 @@ class FunctionTerm:
             for operand in self.operands:
                 temp_ops.append(operand.substitute_variable(variable, term))
 
-            return FunctionTerm(self.signature, self.function_symbol, temp_ops)
+            return FunctionTerm(self.function_symbol, temp_ops)
 
         else:
             return copy.deepcopy(self)
@@ -257,14 +247,13 @@ class Atom(AtomicFormula):
         FLIES(bird) is an atom, FLIES is a predicate
         IS_WHOLE_NUMBER(square(whole_number))  is an atom, square() is a function and IS_WHOLE_NUMBER is a predicate.
     """
-    def __init__(self, signature, predicate_symbol, operands):
-        self.signature = signature
+    def __init__(self, predicate_symbol, operands):
         self.predicate_symbol = predicate_symbol
         self.operands = operands
 
-        check = signature.check_predicate_symbol(predicate_symbol)
+        global global_signature
 
-        if check is False or check!=len(operands):
+        if not global_signature.check_predicate_symbol(predicate_symbol, len(operands)):
             raise Exception("Syntax error! Bad signature")
 
 
@@ -311,7 +300,7 @@ class Atom(AtomicFormula):
             for operand in self.operands:
                 temp_ops.append(operand.substitute_variable(variable, term))
 
-            return Atom(self.signature, self.predicate_symbol, temp_ops)
+            return Atom(self.predicate_symbol, temp_ops)
 
         else:
             return copy.deepcopy(self)
@@ -911,3 +900,29 @@ class Exists(Quantifier):
     def prenex(self):
         """Returns the prenex form of this formula."""
         return Exists(self.variable, self.formula.prenex())
+
+
+#unique variable index
+uv_index = 0
+#unique constant index
+uc_index = 0
+#unique function index
+uf_index = 0
+
+def get_unique_variable():
+    """Returns an unique variable."""
+    global uv_index
+    uv_index = uv_index + 1
+    return "uv%d" % uv_index
+
+def get_unique_constant():
+    """Returns an unique constant."""
+    global uc_index
+    uc_index = uc_index + 1
+    return "uc%d" % uc_index
+
+def get_unique_function(operands):
+    """Returns an unique function."""
+    global uf_index
+    uf_index = uf_index + 1
+    return FunctionTerm("uf%d" % uf_index, operands)

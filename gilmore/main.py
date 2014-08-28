@@ -1,76 +1,26 @@
 # This is where we test our program
 
 from syntax_tree import *
+from skolemize import skolemize
 
-sign = Signature()
+def print_formula(formula):
+	"""Prints a formula with a whitespace"""
+	formula.print_me()
+	print
 
-sign.add_predicate_symbol("brije", 2)
+x_var = VariableTerm("x")
+b_const = ConstantTerm("b")
+brije1 = Atom("brije", [x_var, x_var])
+brije2 = Atom("brije", [b_const, x_var])
+not_brije1 = Not(brije1)
+forall_brije2 = Forall(x_var, brije2)
+exists_forall_brije2 = Exists(b_const, forall_brije2)
+eqiv = Iff(exists_forall_brije2, not_brije1)
+not_equiv = Not(eqiv)
 
-const1 = ConstantTerm('b')
-var2 = VariableTerm('x')
+nnfied = not_equiv.nnf()
+prenex = nnfied.prenex()
+skolemized = skolemize(prenex, [])
 
-#brije(c,x)
-atom1 = Atom(sign, "brije", [ const1, var2])
-
-#brije(x,x)
-atom2 = Atom(sign, "brije", [ var2, var2])
-
-# ~brije(x,x)
-not1 = Not(atom2)
-
-fallX = Forall(var2, atom1)
-existsB = Exists(const1, fallX)
-
-iff1 = Iff(existsB, not1)
-not2 = Not(iff1)
-
-not2.print_me()
-print("")
-nnf = not2.nnf()
-nnf.print_me()
-
-print("")
-
-nnf = nnf.prenex()
-
-nnf.print_me()
-
-print
-print
-
-print("-- NEXT EXAMPLE --")
-print
-
-sign = Signature()
-
-sign.add_predicate_symbol("P", 2)
-
-varx = VariableTerm("x")
-vary = VariableTerm("y")
-
-atomP = Atom(sign, "P", [ varx, vary ])
-
-existsy1 = Exists( vary, atomP )
-forallx1 = Forall( varx, existsy1 )
-
-forallx2 = Forall( varx, atomP)
-existsy2 = Exists( vary, forallx2 )
-
-impl = Imp( forallx1, existsy2)
-impl = Not(impl)
-print("Formula:")
-impl.print_me()
-
-print
-
-impl = impl.nnf()
-print("NNF:")
-impl.print_me()
-
-print
-
-impl = impl.prenex()
-print("Prenex:")
-impl.print_me()
-
-print
+print_formula(prenex)
+print_formula(skolemized)
