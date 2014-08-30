@@ -5,16 +5,17 @@ import copy
 from syntax_tree import OperandTypes, get_unique_constant,\
 ConstantTerm, Forall, get_unique_function
 
+# Non-quantifier operand types
+not_quantifiers = [OperandTypes.T_ATOM, OperandTypes.T_NOT,\
+    OperandTypes.T_AND, OperandTypes.T_OR, OperandTypes.T_IMP, \
+    OperandTypes.T_IFF]
+
 def skolemize(formula, quantified_varible_list):
     """Skolemizes (eliminates the existential quantifiers) the given formula.
 
         We assume that the formula is in the prenex  form.
     """
     formula_type = formula.get_type()
-
-    not_quantifiers = [OperandTypes.T_ATOM, OperandTypes.T_NOT,\
-    OperandTypes.T_AND, OperandTypes.T_OR, OperandTypes.T_IMP, \
-    OperandTypes.T_IFF]
 
     if formula_type in not_quantifiers:
         return skolemize_non_quantifier(formula)
@@ -58,3 +59,15 @@ def skolemize_forall(formula, quantified_varible_list):
         quantified_varible_list.append(quantified_variable)
     return Forall(quantified_variable, skolemize(quantified_formula, \
         quantified_varible_list))
+
+def eliminate_universal_quantifiers(formula):
+    formula_type = formula.get_type()
+
+    if formula_type in not_quantifiers:
+        return copy.deepcopy(formula)
+    elif formula_type == OperandTypes.T_FORALL:
+        return eliminate_universal_quantifiers(formula.get_formula())
+    else:
+        raise Exception("Something went very, very wrong.")    
+
+

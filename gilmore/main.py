@@ -1,7 +1,8 @@
 # This is where we test our program
 
 from syntax_tree import *
-from skolemize import skolemize
+from skolemize import skolemize, eliminate_universal_quantifiers
+from dnf import dnf
 
 def print_formula(formula):
 	"""Prints a formula with a whitespace"""
@@ -21,6 +22,7 @@ not_equiv = Not(eqiv)
 nnfied = not_equiv.nnf()
 prenex = nnfied.prenex()
 skolemized = skolemize(prenex, [])
+skolemized = eliminate_universal_quantifiers(skolemized)
 
 print_formula(prenex)
 print_formula(skolemized)
