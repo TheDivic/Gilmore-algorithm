@@ -6,7 +6,7 @@ from syntax_tree import OperandTypes, get_unique_constant,\
 ConstantTerm, Forall, get_unique_function
 
 # Non-quantifier operand types
-not_quantifiers = [OperandTypes.T_ATOM, OperandTypes.T_NOT,\
+NOT_QUANTIFIERS = [OperandTypes.T_ATOM, OperandTypes.T_NOT,\
     OperandTypes.T_AND, OperandTypes.T_OR, OperandTypes.T_IMP, \
     OperandTypes.T_IFF]
 
@@ -17,7 +17,7 @@ def skolemize(formula, quantified_varible_list):
     """
     formula_type = formula.get_type()
 
-    if formula_type in not_quantifiers:
+    if formula_type in NOT_QUANTIFIERS:
         return skolemize_non_quantifier(formula)
 
     elif formula_type == OperandTypes.T_EXISTS:
@@ -27,7 +27,8 @@ def skolemize(formula, quantified_varible_list):
         return skolemize_forall(formula, quantified_varible_list)
 
     else:
-        raise Exception("Formula of unknown type!")
+        raise Exception("Skolemize exception: formula must be in nnf, \
+        prenex form!")
 
 def skolemize_non_quantifier(formula):
     """Formula that is not quantified is already skolemized. (Prenex assumed)"""
@@ -61,13 +62,15 @@ def skolemize_forall(formula, quantified_varible_list):
         quantified_varible_list))
 
 def eliminate_universal_quantifiers(formula):
+    """Eliminates the universal quantifers from a skolemized formula."""
     formula_type = formula.get_type()
 
-    if formula_type in not_quantifiers:
+    if formula_type in NOT_QUANTIFIERS:
         return copy.deepcopy(formula)
     elif formula_type == OperandTypes.T_FORALL:
         return eliminate_universal_quantifiers(formula.get_formula())
     else:
-        raise Exception("Something went very, very wrong.")    
+        raise Exception("Eliminate quantifiers exception: \
+        formula of unexpected type!")
 
 

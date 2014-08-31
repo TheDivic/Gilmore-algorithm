@@ -18,9 +18,9 @@ class OperandTypes(object):
 
 class TermTypes(object):
     """An enum for all the term types in first order logic."""
-    T_VAR = 0
-    T_FUNC = 1
-    T_CONST = 2
+    T_VAR = 10
+    T_FUNC = 11
+    T_CONST = 12
 
 
 class Signature(object):
