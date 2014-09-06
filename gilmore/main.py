@@ -3,7 +3,7 @@
 from syntax_tree import *
 from skolemize import skolemize, eliminate_universal_quantifiers
 from dnf import dnf
-from herbrand import fetch_constants, remove_duplicates, HerbrandUniverse
+from herbrand import fetch_constants, fetch_functions, HerbrandUniverse
 
 def print_formula(formula):
 	"""Prints a formula with a whitespace"""
@@ -30,3 +30,10 @@ print_formula(skolemized)
 
 herb = HerbrandUniverse(skolemized)
 herb.print_current_level()
+
+smth = herb.next_level()
+herb.print_current_level()
+
+for i in range(1,2):
+	smth = herb.next_level()
+	herb.print_current_level()
