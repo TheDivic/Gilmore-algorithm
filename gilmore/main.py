@@ -3,7 +3,9 @@
 from syntax_tree import *
 from skolemize import skolemize, eliminate_universal_quantifiers
 from dnf import dnf
-from herbrand import fetch_constants, fetch_functions, HerbrandUniverse
+from herbrand import fetch_constants, fetch_functions,fetch_variables, HerbrandUniverse
+import pdb
+from gilmore import go_gilmore
 
 def print_formula(formula):
 	"""Prints a formula with a whitespace"""
@@ -20,20 +22,5 @@ exists_forall_brije2 = Exists(b_const, forall_brije2)
 eqiv = Iff(exists_forall_brije2, not_brije1)
 not_equiv = Not(eqiv)
 
-nnfied = not_equiv.nnf()
-prenex = nnfied.prenex()
-skolemized = skolemize(prenex, [])
-skolemized = eliminate_universal_quantifiers(skolemized)
+go_gilmore(not_equiv)
 
-print_formula(prenex)
-print_formula(skolemized)
-
-herb = HerbrandUniverse(skolemized)
-herb.print_current_level()
-
-smth = herb.next_level()
-herb.print_current_level()
-
-for i in range(1,2):
-	smth = herb.next_level()
-	herb.print_current_level()

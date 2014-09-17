@@ -3,6 +3,7 @@ from syntax_tree import OperandTypes, TermTypes, get_unique_constant, \
 ConstantTerm, FunctionTerm
 from sys import stdout
 from itertools import permutations
+import pdb
 
 def apply_function(function, operands):
     """Applies a given function to a list of operands.
@@ -49,6 +50,30 @@ def fetch_constants(formula):
 
     return remove_duplicates(constants)
 
+def fetch_variables(formula):
+    """Finds all variables in a formula."""
+    formula_type = formula.get_type()
+    variables = []
+
+    if formula_type is OperandTypes.T_ATOM \
+    or formula_type is TermTypes.T_FUNC:
+        for operand in formula.operands:
+            variables += fetch_variables(operand)
+    elif formula_type is OperandTypes.T_NOT:
+        variables = fetch_variables(formula.get_formula())
+    elif formula_type is OperandTypes.T_AND or \
+    formula_type is OperandTypes.T_OR:
+        variables = fetch_variables(formula.get_formula1()) \
+        + fetch_variables(formula.get_formula2())
+    elif formula_type is TermTypes.T_VAR:
+        variables = [formula]
+    elif formula_type is TermTypes.T_CONST:
+        variables = []
+    else:
+        raise Exception("Herbrand exception: formula of unexpected type!")
+
+    return remove_duplicates(variables)
+
 
 def fetch_functions(formula):
     """Finds all functions in a formula."""
@@ -77,7 +102,7 @@ def fetch_functions(formula):
 def remove_duplicates(given_list):
     """Removes duplicates from a given list."""
     without_duplicates = []
-    duplicate_filter = [without_duplicates.append(item) \
+    [without_duplicates.append(item) \
     for item in given_list if item not in without_duplicates]
 
     return without_duplicates
