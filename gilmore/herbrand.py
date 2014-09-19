@@ -118,6 +118,9 @@ class HerbrandUniverse(object):
             self.current_universe_level = [ConstantTerm(get_unique_constant())]
         self.functions = fetch_functions(formula)
 
+    def get_current_level(self):
+        return self.current_universe_level
+
     def next_level(self):
         """Returns the next level of the Herbrand universe."""
         self.level_index += 1
