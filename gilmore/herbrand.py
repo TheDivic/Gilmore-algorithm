@@ -3,7 +3,6 @@ from syntax_tree import OperandTypes, TermTypes, get_unique_constant, \
 ConstantTerm, FunctionTerm
 from sys import stdout
 from itertools import permutations
-import pdb
 
 def apply_function(function, operands):
     """Applies a given function to a list of operands.
@@ -119,6 +118,7 @@ class HerbrandUniverse(object):
         self.functions = fetch_functions(formula)
 
     def get_current_level(self):
+        """Get the current universe level."""
         return self.current_universe_level
 
     def next_level(self):

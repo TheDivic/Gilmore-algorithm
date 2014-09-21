@@ -6,6 +6,7 @@ from sys import stdout
 ATOMIC_TYPES = [OperandTypes.T_ATOM, OperandTypes.T_NOT]
 
 def print_dnf(clause_list):
+    """Prints the clause list."""
     for clause in clause_list:
         stdout.write("(")
         for i in range(0, len(clause) - 1):
