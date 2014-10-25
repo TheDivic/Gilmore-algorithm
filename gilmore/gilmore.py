@@ -1,20 +1,26 @@
 """Gilmore's algorithm implementation."""
 
-from syntax_tree import And, OperandTypes
+from syntax_tree import And, OperandTypes, Not
 from skolemize import skolemize, eliminate_universal_quantifiers
 from herbrand import HerbrandUniverse, fetch_variables
 from dnf import dnf, print_dnf
 from itertools import product
+import pdb
 
 GILMORE_LIMIT = 5
+
+def prove_valid(formula):
+    not_formula = Not(formula)
+    go_gilmore(not_formula)
 
 def go_gilmore(formula):
     """Gilmore's algorithm implementation."""
 
     #Transform the formula into its prenex form
     #and eliminate the universal quantifiers
-    transformed_formula = skolemize(formula.nnf().prenex(), [])
-    transformed_formula = eliminate_universal_quantifiers(transformed_formula)
+    transformed_formula = formula.nnf()
+    transformed_formula = transformed_formula.prenex()
+    transformed_formula = skolemize(transformed_formula, [])
 
     print "-- TRANSFORMED FORMULA --"
     transformed_formula.print_me()
@@ -44,6 +50,8 @@ def go_gilmore(formula):
 
             subd_formula = And(subd_formula, new_subd_formula)
 
+        print "-- SUBD FORMULA --"
+        subd_formula.print_me()
         print
         print "-- DNF WITH SUBSTITUTIONS --"
         dnf_formula = dnf(subd_formula)

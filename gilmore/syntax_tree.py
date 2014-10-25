@@ -2,6 +2,7 @@
 
 from sys import stdout
 import copy
+import pdb
 
 class OperandTypes(object):
     """An enum for all the operand types in first order logic."""

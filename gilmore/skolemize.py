@@ -4,6 +4,7 @@ Skolemization eliminates the existential quantifiers from the formula."""
 import copy
 from syntax_tree import OperandTypes, get_unique_constant,\
 ConstantTerm, Forall, get_unique_function
+import pdb
 
 # Non-quantifier operand types
 NOT_QUANTIFIERS = [OperandTypes.T_ATOM, OperandTypes.T_NOT,\

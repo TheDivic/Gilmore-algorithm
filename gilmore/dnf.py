@@ -21,7 +21,7 @@ def dnf(formula):
     into its Disjunctive Normal Form"""
     formula_type = formula.get_type()
     if formula_type in ATOMIC_TYPES:
-        return [formula]
+        return [[formula]]
     elif formula_type is OperandTypes.T_OR:
         return dnf(formula.get_formula1()) + dnf(formula.get_formula2())
     elif formula_type is OperandTypes.T_AND:
@@ -34,7 +34,7 @@ def dnf(formula):
 
 def make_pairs(atom_list1, atom_list2):
     """Cartesian product of two lists."""
-    return [(x, y) for x in atom_list1 for y in atom_list2]
+    return [x + y for x in atom_list1 for y in atom_list2]
 
 
 
