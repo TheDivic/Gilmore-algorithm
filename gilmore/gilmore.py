@@ -21,6 +21,7 @@ def go_gilmore(formula):
     transformed_formula = formula.nnf()
     transformed_formula = transformed_formula.prenex()
     transformed_formula = skolemize(transformed_formula, [])
+    transformed_formula = eliminate_universal_quantifiers(transformed_formula)
 
     print "-- TRANSFORMED FORMULA --"
     transformed_formula.print_me()
@@ -34,7 +35,8 @@ def go_gilmore(formula):
 
     # ALGORITHM STARTS HERE: iterates until the proof is found
     # or we have reached the GILMORE_LIMIT
-    for _ in range(0, GILMORE_LIMIT):
+    for iteration in range(0, GILMORE_LIMIT):
+        print("Iteration number %s" %(iteration + 1))
         substitutions = list(product(current_level, repeat=num_vars))
         subd_formula = transformed_formula
 
@@ -89,3 +91,6 @@ def go_gilmore(formula):
             print "Next level."
 
         current_level = universe.next_level()
+
+    if iteration is GILMORE_LIMIT - 1:
+        print "Proof not found."
