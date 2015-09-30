@@ -52,7 +52,7 @@ class Signature(object):
         elif self.functions[function_symbol] == arity:
             return True
         else:
-            return False
+            return True
 
     def check_predicate_symbol(self, predicate_symbol, arity):
         """Returns the arity of a given predicate symbol."""

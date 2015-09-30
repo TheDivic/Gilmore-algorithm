@@ -13,7 +13,7 @@ def apply_function(function, operands):
     if len(operands) < arity:
         new_operands = list(operands)
         for _ in range(len(operands), arity):
-            new_operands += get_unique_constant()
+            new_operands.append(ConstantTerm(get_unique_constant()))
         return [FunctionTerm(function.function_symbol, new_operands)]
     else:
         applications = []

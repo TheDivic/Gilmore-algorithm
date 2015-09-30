@@ -1,3 +1,4 @@
+
 """Module dnf that contains the functions for the Disjunctive Normal Form"""
 from syntax_tree import OperandTypes
 from sys import stdout
@@ -8,12 +9,12 @@ ATOMIC_TYPES = [OperandTypes.T_ATOM, OperandTypes.T_NOT]
 def print_dnf(clause_list):
     """Prints the clause list."""
     for clause in clause_list:
-        stdout.write("(")
+        stdout.write("[")
         for i in range(0, len(clause) - 1):
             clause[i].print_me()
             stdout.write(" /\\ ")
         clause[len(clause)-1].print_me()
-        stdout.write(")")
+        stdout.write("]")
         print
 
 def dnf(formula):

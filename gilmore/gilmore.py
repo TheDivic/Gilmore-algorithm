@@ -44,6 +44,9 @@ def go_gilmore(formula):
             subd_formula = subd_formula.substitute_variable(variables[i],\
             substitutions[0][i])
 
+        transformed_formula.print_me()
+        print
+
         for i in range(1, len(substitutions)):
             new_subd_formula = transformed_formula
             for j in range(0, num_vars):
@@ -66,16 +69,19 @@ def go_gilmore(formula):
         for clause in dnf_formula:
             found_positive = []
             found_negative = []
+            found = False
 
             for literal in clause:
                 if literal.get_type() is OperandTypes.T_NOT:
                     if literal.get_formula() in found_positive:
+                        found = True
                         remove_count += 1
                         break
                     else:
                         found_negative.append(literal.get_formula())
                 elif literal.get_type() is OperandTypes.T_ATOM:
                     if literal in found_negative:
+                        found = True
                         remove_count += 1
                         break
                     else:
@@ -83,7 +89,15 @@ def go_gilmore(formula):
                 else:
                     raise Exception("Gilmore multiplication method exception!")
 
+            if not found:
+                print("NOT ELIMINATED")
+                print("["),
+                for literal in clause:
+                    literal.print_me()
+                    print(", "),
+                print("]")
 
+        print("REMOVE COUNT: %s" %remove_count)
         if remove_count == len(dnf_formula):
             print "UNSAT!"
             break
